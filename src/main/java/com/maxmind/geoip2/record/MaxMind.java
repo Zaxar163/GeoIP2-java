@@ -12,22 +12,22 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public final class MaxMind extends AbstractRecord {
 
-    private final Integer queriesRemaining;
+	private final Integer queriesRemaining;
 
-    public MaxMind() {
-        this(null);
-    }
+	public MaxMind() {
+		this(null);
+	}
 
-    public MaxMind(@JsonProperty("queries_remaining") Integer queriesRemaining) {
-        this.queriesRemaining = queriesRemaining;
-    }
+	public MaxMind(@JsonProperty("queries_remaining") Integer queriesRemaining) {
+		this.queriesRemaining = queriesRemaining;
+	}
 
-    /**
-     * @return The number of remaining queried in your account for the current
-     * end point.
-     */
-    @JsonProperty("queries_remaining")
-    public Integer getQueriesRemaining() {
-        return this.queriesRemaining;
-    }
+	/**
+	 * @return The number of remaining queried in your account for the current end
+	 *         point.
+	 */
+	@JsonProperty("queries_remaining")
+	public Integer getQueriesRemaining() {
+		return this.queriesRemaining;
+	}
 }

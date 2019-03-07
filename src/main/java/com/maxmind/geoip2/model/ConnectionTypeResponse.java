@@ -9,60 +9,56 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public class ConnectionTypeResponse extends AbstractResponse {
 
-    /**
-     * The enumerated values that connection-type may take.
-     */
-    public enum ConnectionType {
-        DIALUP("Dialup"), CABLE_DSL("Cable/DSL"), CORPORATE("Corporate"), CELLULAR(
-                "Cellular");
+	/**
+	 * The enumerated values that connection-type may take.
+	 */
+	public enum ConnectionType {
+		DIALUP("Dialup"), CABLE_DSL("Cable/DSL"), CORPORATE("Corporate"), CELLULAR("Cellular");
 
-        private final String name;
+		private final String name;
 
-        ConnectionType(String name) {
-            this.name = name;
-        }
+		ConnectionType(String name) {
+			this.name = name;
+		}
 
-        /*
-         * (non-Javadoc)
-         *
-         * @see java.lang.Enum#toString()
-         */
-        @JsonValue
-        @Override
-        public String toString() {
-            return this.name;
-        }
-    }
+		/*
+		 * (non-Javadoc)
+		 *
+		 * @see java.lang.Enum#toString()
+		 */
+		@JsonValue
+		@Override
+		public String toString() {
+			return this.name;
+		}
+	}
 
-    private final ConnectionType connectionType;
-    private final String ipAddress;
+	private final ConnectionType connectionType;
+	private final String ipAddress;
 
+	ConnectionTypeResponse() {
+		this(null, null);
+	}
 
-    ConnectionTypeResponse() {
-        this(null, null);
-    }
+	public ConnectionTypeResponse(@JsonProperty("connection_type") ConnectionType connectionType,
+			@JacksonInject("ip_address") @JsonProperty("ip_address") String ipAddress) {
+		this.connectionType = connectionType;
+		this.ipAddress = ipAddress;
+	}
 
-    public ConnectionTypeResponse(
-            @JsonProperty("connection_type") ConnectionType connectionType,
-            @JacksonInject("ip_address") @JsonProperty("ip_address") String ipAddress
-    ) {
-        this.connectionType = connectionType;
-        this.ipAddress = ipAddress;
-    }
+	/**
+	 * @return The connection type of the IP address.
+	 */
+	@JsonProperty("connection_type")
+	public ConnectionType getConnectionType() {
+		return this.connectionType;
+	}
 
-    /**
-     * @return The connection type of the IP address.
-     */
-    @JsonProperty("connection_type")
-    public ConnectionType getConnectionType() {
-        return this.connectionType;
-    }
-
-    /**
-     * @return The IP address that the data in the model is for.
-     */
-    @JsonProperty("ip_address")
-    public String getIpAddress() {
-        return this.ipAddress;
-    }
+	/**
+	 * @return The IP address that the data in the model is for.
+	 */
+	@JsonProperty("ip_address")
+	public String getIpAddress() {
+		return this.ipAddress;
+	}
 }

@@ -1,10 +1,10 @@
 package com.maxmind.geoip2.record;
 
-import com.fasterxml.jackson.annotation.JacksonInject;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import java.util.List;
 import java.util.Map;
+
+import com.fasterxml.jackson.annotation.JacksonInject;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * <p>
@@ -22,46 +22,34 @@ import java.util.Map;
  */
 public final class RepresentedCountry extends Country {
 
-    private final String type;
+	private final String type;
 
-    public RepresentedCountry() {
-        this(null, null, null, false, null, null, null);
-    }
+	public RepresentedCountry() {
+		this(null, null, null, false, null, null, null);
+	}
 
-    // This method is for backwards compatibility. We should remove it when we
-    // do a major release.
-    public RepresentedCountry(
-            List<String> locales,
-            Integer confidence,
-            Integer geoNameId,
-            String isoCode,
-            Map<String, String> names,
-            String type
-    ) {
-        this(locales, confidence, geoNameId, false, isoCode, names, type);
-    }
+	public RepresentedCountry(@JacksonInject("locales") List<String> locales,
+			@JsonProperty("confidence") Integer confidence, @JsonProperty("geoname_id") Integer geoNameId,
+			@JsonProperty("is_in_european_union") boolean isInEuropeanUnion, @JsonProperty("iso_code") String isoCode,
+			@JsonProperty("names") Map<String, String> names, @JsonProperty("type") String type) {
+		super(locales, confidence, geoNameId, isInEuropeanUnion, isoCode, names);
+		this.type = type;
+	}
 
-    public RepresentedCountry(
-            @JacksonInject("locales") List<String> locales,
-            @JsonProperty("confidence") Integer confidence,
-            @JsonProperty("geoname_id") Integer geoNameId,
-            @JsonProperty("is_in_european_union") boolean isInEuropeanUnion,
-            @JsonProperty("iso_code") String isoCode,
-            @JsonProperty("names") Map<String, String> names,
-            @JsonProperty("type") String type
-    ) {
-        super(locales, confidence, geoNameId, isInEuropeanUnion, isoCode,
-                names);
-        this.type = type;
-    }
+	// This method is for backwards compatibility. We should remove it when we
+	// do a major release.
+	public RepresentedCountry(List<String> locales, Integer confidence, Integer geoNameId, String isoCode,
+			Map<String, String> names, String type) {
+		this(locales, confidence, geoNameId, false, isoCode, names, type);
+	}
 
-    /**
-     * @return A string indicating the type of entity that is representing the
-     * country. Currently we only return {@code military} but this could
-     * expand to include other types in the future.
-     */
-    public String getType() {
-        return this.type;
-    }
+	/**
+	 * @return A string indicating the type of entity that is representing the
+	 *         country. Currently we only return {@code military} but this could
+	 *         expand to include other types in the future.
+	 */
+	public String getType() {
+		return this.type;
+	}
 
 }

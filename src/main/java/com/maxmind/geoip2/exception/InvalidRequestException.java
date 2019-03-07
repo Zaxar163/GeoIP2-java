@@ -8,46 +8,45 @@ import java.net.URL;
  * but the request sent was invalid in some way.
  */
 public final class InvalidRequestException extends GeoIp2Exception {
-    private static final long serialVersionUID = 8662062420258379643L;
-    private final String code;
-    private final URL url;
+	private static final long serialVersionUID = 8662062420258379643L;
+	private final String code;
+	private final URL url;
 
-    /**
-     * @param message A message explaining the cause of the error.
-     * @param code    The error code returned by the web service.
-     * @param url     The URL queried.
-     */
-    public InvalidRequestException(String message, String code, URL url) {
-        super(message);
-        this.url = url;
-        this.code = code;
-    }
+	/**
+	 * @param message    A message explaining the cause of the error.
+	 * @param code       The error code returned by the web service.
+	 * @param httpStatus The HTTP status of the response.
+	 * @param url        The URL queried.
+	 * @param e          The cause of the exception.
+	 */
+	public InvalidRequestException(String message, String code, int httpStatus, URL url, Throwable e) {
+		super(message, e);
+		this.code = code;
+		this.url = url;
+	}
 
-    /**
-     * @param message    A message explaining the cause of the error.
-     * @param code       The error code returned by the web service.
-     * @param httpStatus The HTTP status of the response.
-     * @param url        The URL queried.
-     * @param e          The cause of the exception.
-     */
-    public InvalidRequestException(String message, String code, int httpStatus,
-                                   URL url, Throwable e) {
-        super(message, e);
-        this.code = code;
-        this.url = url;
-    }
+	/**
+	 * @param message A message explaining the cause of the error.
+	 * @param code    The error code returned by the web service.
+	 * @param url     The URL queried.
+	 */
+	public InvalidRequestException(String message, String code, URL url) {
+		super(message);
+		this.url = url;
+		this.code = code;
+	}
 
-    /**
-     * @return The error code returned by the MaxMind web service.
-     */
-    public String getCode() {
-        return this.code;
-    }
+	/**
+	 * @return The error code returned by the MaxMind web service.
+	 */
+	public String getCode() {
+		return this.code;
+	}
 
-    /**
-     * @return the URL queried.
-     */
-    public URL getUrl() {
-        return this.url;
-    }
+	/**
+	 * @return the URL queried.
+	 */
+	public URL getUrl() {
+		return this.url;
+	}
 }

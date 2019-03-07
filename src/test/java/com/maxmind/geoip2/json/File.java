@@ -8,11 +8,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class File {
-    public static String readJsonFile(String name) throws IOException,
-           URISyntaxException {
-        URL resource = File.class
-                .getResource("/test-data/" + name + ".json");
-        return new String(Files.readAllBytes(Paths.get(resource.toURI())),
-                StandardCharsets.UTF_8);
-    }
+	public static String readJsonFile(String name) throws IOException, URISyntaxException {
+		URL resource = File.class.getResource("/test-data/" + name + ".json");
+		return new String(Files.readAllBytes(Paths.get(resource.toURI())), StandardCharsets.UTF_8);
+	}
 }

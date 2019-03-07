@@ -8,6 +8,9 @@ repositories {
     mavenCentral()
 }
 
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
 }
@@ -22,7 +25,6 @@ dependencies {
 
     testCompile 'junit:junit:+'
     testCompile 'com.github.tomakehurst:wiremock:+'
-    testCompile 'org.skyscreamer:jsonassert:+'
     testCompile 'org.slf4j:slf4j-simple:+'
     testCompile 'com.fasterxml.jackson.jr:jackson-jr-objects:+'
     testCompile 'pl.pragmatists:JUnitParams:+'

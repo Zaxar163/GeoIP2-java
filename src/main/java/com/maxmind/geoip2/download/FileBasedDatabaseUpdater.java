@@ -20,85 +20,88 @@ import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.apache.commons.compress.utils.IOUtils;
 
 /**
- * Concrete implementation of {@link DatabaseUpdater} that updates {@link File}s.
+ * Concrete implementation of {@link DatabaseUpdater} that updates
+ * {@link File}s.
  */
 public class FileBasedDatabaseUpdater implements DatabaseUpdater {
-    private static final String DATABASE_FILE_EXTENSION = ".mmdb";
-    private static final String CHECKSUM_FILE_EXTENSION = ".checksum";
+	private static final String DATABASE_FILE_EXTENSION = ".mmdb";
+	private static final String CHECKSUM_FILE_EXTENSION = ".checksum";
 
-    private final DatabaseDownloader downloader;
-    private final File database;
-    private String databaseMd5;
+	private static void extractAndOverwriteFile(File database, File tmpTarFile) throws IOException {
+		ArchiveInputStream tarInputStream = new TarArchiveInputStream(
+				new GzipCompressorInputStream(new BufferedInputStream(new FileInputStream(tmpTarFile))));
+		try {
+			ArchiveEntry entry = null;
+			while ((entry = tarInputStream.getNextEntry()) != null) {
+				if (entry.getName().endsWith(DATABASE_FILE_EXTENSION)) {
+					final OutputStream outputFileStream = new BufferedOutputStream(new FileOutputStream(database));
+					IOUtils.copy(tarInputStream, outputFileStream);
+					IOUtils.closeQuietly(outputFileStream);
+					break;
+				}
+			}
+		} finally {
+			IOUtils.closeQuietly(tarInputStream);
+		}
+	}
+	private final DatabaseDownloader downloader;
+	private final File database;
 
-    public FileBasedDatabaseUpdater(DatabaseDownloader downloader, File database) throws IOException {
-        this.downloader = downloader;
-        this.database = database;
-        databaseMd5 = readCheckSum();
-    }
+	private String databaseMd5;
 
-    private String readCheckSum() throws IOException {
-        Path checkSumPath = getCheckSumPath();
-        if (checkSumPath.toFile().exists()) {
-            byte[] readAllBytes = Files.readAllBytes(checkSumPath);
-            return new String(readAllBytes, "UTF-8");
-        }
-        return null;
-    }
+	public FileBasedDatabaseUpdater(DatabaseDownloader downloader, File database) throws IOException {
+		this.downloader = downloader;
+		this.database = database;
+		databaseMd5 = readCheckSum();
+	}
 
-    private Path getCheckSumPath() {
-        return new File(database.getParent(), database.getName() + CHECKSUM_FILE_EXTENSION).toPath();
-    }
+	private Path getCheckSumPath() {
+		return new File(database.getParent(), database.getName() + CHECKSUM_FILE_EXTENSION).toPath();
+	}
 
-    /**
-     * Verifies the current available version and if a newer one exists, downloads it replacing the current version.
-     *
-     * @return
-     * @throws IOException
-     */
-    public boolean refresh() throws IOException {
-        String databaseMd5 = downloader.getDatabaseMd5();
-        if (this.databaseMd5 == null || !this.databaseMd5.equals(databaseMd5)) {
-            replaceExistingDatabase();
-            writeCheckSum(databaseMd5);
-            this.databaseMd5 = databaseMd5;
-            return true;
-        }
-        return false;
-    }
+	private String readCheckSum() throws IOException {
+		Path checkSumPath = getCheckSumPath();
+		if (checkSumPath.toFile().exists()) {
+			byte[] readAllBytes = Files.readAllBytes(checkSumPath);
+			return new String(readAllBytes, "UTF-8");
+		}
+		return null;
+	}
 
-    private void replaceExistingDatabase() throws IOException {
-        File tmpTarFile = Files.createTempFile(database.getName() + "-", ".tar.gz").toFile();
-        downloader.downloadDatabaseToFile(tmpTarFile);
+	/**
+	 * Verifies the current available version and if a newer one exists, downloads
+	 * it replacing the current version.
+	 *
+	 * @return
+	 * @throws IOException
+	 */
+	@Override
+	public boolean refresh() throws IOException {
+		String databaseMd5 = downloader.getDatabaseMd5();
+		if (this.databaseMd5 == null || !this.databaseMd5.equals(databaseMd5)) {
+			replaceExistingDatabase();
+			writeCheckSum(databaseMd5);
+			this.databaseMd5 = databaseMd5;
+			return true;
+		}
+		return false;
+	}
 
-        File replacementDatabase = new File(tmpTarFile.getParentFile(), database.getName() + DATABASE_FILE_EXTENSION);
-        extractAndOverwriteFile(replacementDatabase, tmpTarFile);
-        tmpTarFile.delete();
+	private void replaceExistingDatabase() throws IOException {
+		File tmpTarFile = Files.createTempFile(database.getName() + "-", ".tar.gz").toFile();
+		downloader.downloadDatabaseToFile(tmpTarFile);
 
-        CopyOption[] copyOptions = { StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES };
-        Files.copy(replacementDatabase.toPath(), database.toPath(), copyOptions);
-        replacementDatabase.delete();
-    }
+		File replacementDatabase = new File(tmpTarFile.getParentFile(), database.getName() + DATABASE_FILE_EXTENSION);
+		extractAndOverwriteFile(replacementDatabase, tmpTarFile);
+		tmpTarFile.delete();
 
-    private static void extractAndOverwriteFile(File database, File tmpTarFile) throws IOException {
-        ArchiveInputStream tarInputStream = new TarArchiveInputStream(
-                        new GzipCompressorInputStream(new BufferedInputStream(new FileInputStream(tmpTarFile))));
-        try {
-            ArchiveEntry entry = null;
-            while ((entry = tarInputStream.getNextEntry()) != null) {
-                if (entry.getName().endsWith(DATABASE_FILE_EXTENSION)) {
-                    final OutputStream outputFileStream = new BufferedOutputStream(new FileOutputStream(database));
-                    IOUtils.copy(tarInputStream, outputFileStream);
-                    IOUtils.closeQuietly(outputFileStream);
-                    break;
-                }
-            }
-        } finally {
-            IOUtils.closeQuietly(tarInputStream);
-        }
-    }
+		CopyOption[] copyOptions = { StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES };
+		Files.copy(replacementDatabase.toPath(), database.toPath(), copyOptions);
+		replacementDatabase.delete();
+	}
 
-    private void writeCheckSum(String databaseMd5) throws IOException, UnsupportedEncodingException {
-        Path checkSumPath = getCheckSumPath();
-        Files.write(checkSumPath, databaseMd5.getBytes("UTF-8"));
-    }
-} 
+	private void writeCheckSum(String databaseMd5) throws IOException, UnsupportedEncodingException {
+		Path checkSumPath = getCheckSumPath();
+		Files.write(checkSumPath, databaseMd5.getBytes("UTF-8"));
+	}
+}

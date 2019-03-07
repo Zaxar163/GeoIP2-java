@@ -8,36 +8,33 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class IspResponse extends AsnResponse {
 
-    private final String isp;
-    private final String organization;
+	private final String isp;
+	private final String organization;
 
-    IspResponse() {
-        this(null, null, null, null, null);
-    }
+	IspResponse() {
+		this(null, null, null, null, null);
+	}
 
-    public IspResponse(
-            @JsonProperty("autonomous_system_number") Integer autonomousSystemNumber,
-            @JsonProperty("autonomous_system_organization") String autonomousSystemOrganization,
-            @JacksonInject("ip_address") @JsonProperty("ip_address") String ipAddress,
-            @JsonProperty("isp") String isp,
-            @JsonProperty("organization") String organization
-    ) {
-        super(autonomousSystemNumber, autonomousSystemOrganization, ipAddress);
-        this.isp = isp;
-        this.organization = organization;
-    }
+	public IspResponse(@JsonProperty("autonomous_system_number") Integer autonomousSystemNumber,
+			@JsonProperty("autonomous_system_organization") String autonomousSystemOrganization,
+			@JacksonInject("ip_address") @JsonProperty("ip_address") String ipAddress, @JsonProperty("isp") String isp,
+			@JsonProperty("organization") String organization) {
+		super(autonomousSystemNumber, autonomousSystemOrganization, ipAddress);
+		this.isp = isp;
+		this.organization = organization;
+	}
 
-    /**
-     * @return The name of the ISP associated with the IP address.
-     */
-    public String getIsp() {
-        return this.isp;
-    }
+	/**
+	 * @return The name of the ISP associated with the IP address.
+	 */
+	public String getIsp() {
+		return this.isp;
+	}
 
-    /**
-     * @return The name of the organization associated with the IP address.
-     */
-    public String getOrganization() {
-        return this.organization;
-    }
+	/**
+	 * @return The name of the organization associated with the IP address.
+	 */
+	public String getOrganization() {
+		return this.organization;
+	}
 }
