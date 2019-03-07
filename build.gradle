@@ -14,16 +14,17 @@ tasks.withType(JavaCompile) {
 
 dependencies {
     compile 'com.maxmind.db:maxmind-db:+'
-    compile 'org.apache.httpcomponents:httpclient:+' // 4.5.5
-    compile 'com.fasterxml.jackson.core:jackson-databind:+' // 2.9.8
-    compile 'com.fasterxml.jackson.core:jackson-core:+' // 2.9.8
-    compile 'com.fasterxml.jackson.core:jackson-annotations:+' // 2.9.8
+    compile 'org.apache.httpcomponents:httpclient:+'
+    compile 'com.fasterxml.jackson.core:jackson-databind:+'
+    compile 'com.fasterxml.jackson.core:jackson-core:+'
+    compile 'com.fasterxml.jackson.core:jackson-annotations:+'
+    compile 'org.apache.commons:commons-compress:+'
 
     testCompile 'junit:junit:+'
     testCompile 'com.github.tomakehurst:wiremock:+'
     testCompile 'org.skyscreamer:jsonassert:+'
     testCompile 'org.slf4j:slf4j-simple:+'
-    testCompile 'com.fasterxml.jackson.jr:jackson-jr-objects:+' // 2.9.8
+    testCompile 'com.fasterxml.jackson.jr:jackson-jr-objects:+'
     testCompile 'pl.pragmatists:JUnitParams:+'
     testCompile 'com.jcabi:jcabi-matchers:+'
 }

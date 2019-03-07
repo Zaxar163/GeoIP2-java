@@ -21,9 +21,10 @@ import java.util.Arrays;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.*;
 
+@SuppressWarnings("deprecation")
 public class DatabaseReaderTest {
 
-    @Rule
+	@Rule
     public ExpectedException exception = ExpectedException.none();
     private File geoipFile;
     private InputStream geoipStream;

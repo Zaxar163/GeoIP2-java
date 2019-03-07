@@ -17,6 +17,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.maxmind.geoip2.json.File.readJsonFile;
 import static org.junit.Assert.*;
 
+@SuppressWarnings("deprecation")
 public class InsightsResponseTest {
     @Rule
     public final WireMockRule wireMockRule = new WireMockRule(0);
@@ -74,7 +75,6 @@ public class InsightsResponseTest {
                 "MN", this.insights.getLeastSpecificSubdivision().getIsoCode());
     }
 
-    @SuppressWarnings("boxing")
     @Test
     public void testTraits() {
         Traits traits = this.insights.getTraits();

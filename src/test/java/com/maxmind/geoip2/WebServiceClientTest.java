@@ -21,7 +21,7 @@ import static com.jcabi.matchers.RegexMatchers.matchesPattern;
 import static org.hamcrest.core.StringStartsWith.startsWith;
 import static org.junit.Assert.*;
 
-
+@SuppressWarnings("deprecation")
 @RunWith(JUnitParamsRunner.class)
 public class WebServiceClientTest {
 
